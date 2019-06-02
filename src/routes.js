@@ -8,4 +8,7 @@ import userController from './controllers/userController';
 //Base Route
 router.get('/', initialController.get);
 
+//User Routes
+router.post('/users/register', userController.register);
+
 export default router;
