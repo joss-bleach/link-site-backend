@@ -29,10 +29,15 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   postController.new
 );
-router.post(
+router.delete(
   '/posts/delete/:id',
   passport.authenticate('jwt', { session: false }),
   postController.delete
+);
+router.post(
+  '/posts/comment/:id',
+  passport.authenticate('jwt', { session: false }),
+  postController.addComment
 );
 
 export default router;
