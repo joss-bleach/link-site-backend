@@ -19,11 +19,20 @@ router.get(
   userController.me
 );
 
-//Post Routes
+//Post Routes - Public
+router.get('/posts/:id', postController.getPost);
+router.get('/posts', postController.getPosts);
+
+//Post Routes - Private
 router.post(
   '/posts/new',
   passport.authenticate('jwt', { session: false }),
   postController.new
+);
+router.post(
+  '/posts/delete/:id',
+  passport.authenticate('jwt', { session: false }),
+  postController.delete
 );
 
 export default router;
