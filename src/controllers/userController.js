@@ -1,7 +1,6 @@
 import db from '../models';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import passport from 'passport';
 import keys from '../config/keys';
 
 const userController = {};
@@ -75,6 +74,16 @@ userController.login = (req, res) => {
         return res.status(404).json(errors);
       }
     });
+  });
+};
+
+//Route - /api/users/me
+//Desc - Gets current user information
+//Access - Private
+userController.me = (req, res) => {
+  res.json({
+    id: req.user.id,
+    username: req.user.username
   });
 };
 

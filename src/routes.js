@@ -1,4 +1,5 @@
 import express from 'express';
+import passport from 'passport';
 const router = express();
 
 //Controllers
@@ -11,5 +12,10 @@ router.get('/', initialController.get);
 //User Routes
 router.post('/users/register', userController.register);
 router.post('/users/login', userController.login);
+router.get(
+  '/users/me',
+  passport.authenticate('jwt', { session: false }),
+  userController.me
+);
 
 export default router;
