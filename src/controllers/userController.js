@@ -1,10 +1,14 @@
 import db from '../models';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import passport from 'passport';
+import keys from '../config/keys';
 
 const userController = {};
 
 //Validate
 import validateRegistrationInput from '../validation/registration';
+import validateLoginInput from '../validation/login';
 
 //Route - /api/users/register
 //Desc - User registration
@@ -25,12 +29,51 @@ userController.register = (req, res) => {
       user
         .save()
         .then(newUser => {
-          res.status(200).json({
+          return res.status(200).json({
             success: true,
             data: newUser
           });
         })
         .catch(err => console.log(err));
+    });
+  });
+};
+
+//Route - /api/users/login
+//Desc - Log in
+//Access - Public
+userController.login = (req, res) => {
+  const { errors, isValid } = validateLoginInput(req.body);
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+  const { username, password } = req.body;
+  db.User.findOne({ username }).then(user => {
+    if (!user) {
+      errors.username = 'Incorrect username/password combination.';
+      return res.status(404).json(errors);
+    }
+    bcrypt.compare(password, user.password).then(isMatch => {
+      if (isMatch) {
+        const payload = {
+          id: user.id,
+          username: user.username
+        };
+        jwt.sign(
+          payload,
+          keys.secretOrKey,
+          { expiresIn: '1y' },
+          (err, token) => {
+            res.json({
+              success: true,
+              token: 'Bearer ' + token
+            });
+          }
+        );
+      } else {
+        errors.password = 'Incorrect username/passsword combination.';
+        return res.status(404).json(errors);
+      }
     });
   });
 };

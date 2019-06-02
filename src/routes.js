@@ -10,5 +10,6 @@ router.get('/', initialController.get);
 
 //User Routes
 router.post('/users/register', userController.register);
+router.post('/users/login', userController.login);
 
 export default router;
