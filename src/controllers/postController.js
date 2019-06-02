@@ -84,4 +84,38 @@ postController.addComment = (req, res) => {
     .catch(err => res.status(404).json({ postNotFound: 'Post not found.' }));
 };
 
+//Route - /api/posts/upvote/:id
+//Desc - Upvote
+//Access - Public
+postController.upVote = (req, res) => {
+  db.Post.findById(req.params.id)
+    .then(post => {
+      post.upVotes = post.upVotes + 1;
+      post
+        .save()
+        .then(upVotes =>
+          res.status(400).json({ success: true, upVotes: upVotes })
+        )
+        .catch(err => console.log(err));
+    })
+    .catch(err => res.status(200).json(err));
+};
+
+//Route - /api/posts/downvote/:id
+//Desc - Downvote
+//Access - Public
+postController.downVote = (req, res) => {
+  db.Post.findById(req.params.id)
+    .then(post => {
+      post.upVotes = post.upVotes - 1;
+      post
+        .save()
+        .then(upVotes =>
+          res.status(400).json({ success: true, upVotes: upVotes })
+        )
+        .catch(err => console.log(err));
+    })
+    .catch(err => res.status(200).json(err));
+};
+
 export default postController;

@@ -22,6 +22,8 @@ router.get(
 //Post Routes - Public
 router.get('/posts/:id', postController.getPost);
 router.get('/posts', postController.getPosts);
+router.post('/posts/upvote/:id', postController.upVote);
+router.post('/posts/downvote/:id', postController.downVote);
 
 //Post Routes - Private
 router.post(
